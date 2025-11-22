@@ -1,5 +1,5 @@
 # O main.py vai salvar o JSON neste arquivo aqui.
-# O utils só precisa ler ele.
+# basicamente esse arquivo procura o o ultimo estoque enviado.
 import pandas as pd
 import os
 import glob
@@ -8,7 +8,7 @@ import json
 # pasta
 PASTA_UPLOADS = "uploads"
 
-# enontea arquvio mais novo
+# procura arquvio mais novo
 def encontrar_ultimo_catalogo():
     # Se a pasta não existe cria ela
     if not os.path.exists(PASTA_UPLOADS):
@@ -47,4 +47,5 @@ def carregar_dados_como_txt():
 
     except Exception as e:
         return f"Erro ao ler: {e}"
+
 
