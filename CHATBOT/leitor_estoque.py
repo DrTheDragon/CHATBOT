@@ -1,24 +1,29 @@
-import os
-
 # O main.py vai salvar o JSON neste arquivo aqui.
 # O utils só precisa ler ele.
-NOME_ARQUIVO_DADOS = "catalogo_loja.txt"
+import pandas as pd
+import json
 
-def carregar_dados():
-    # 1. Verifica se o arquivo existe
-    if not os.path.exists(NOME_ARQUIVO_DADOS):
-        return "ERRO CRÍTICO: A empresa ainda não enviou o catálogo pelo site."
-
+def carregar_dados_como_txt():
+    #parte de encontrar o arquivo igual ante
+    arquivo = encontrar_ultimo_catalogo() 
+    
     try:
-        # 2. Abre e lê o conteúdo
-        with open(NOME_ARQUIVO_DADOS, "r", encoding="utf-8") as arquivo:
-            conteudo = arquivo.read()
-            
-            # se o arquivo estive vazio
-            if not conteudo:
-                return "AVISO: O catálogo existe mas esta vazio"
-                
-            return conteudo
+        # se for json, 
+        if arquivo.endswith(".json"):
+           
+            df = pd.read_json(arquivo)
+        elif arquivo.endswith(".xlsx") or arquivo.endswith(".xls"):
+            # Mse for excel
+            df = pd.read_excel(arquivo)
+        elif arquivo.endswith(".csv"):
+            # se for csv
+            df = pd.read_csv(arquivo)
+        else:
+            return "Formato não suportado!"
+
+        # deixa o arquivo legivwel p o gemini
+        texto_final = df.to_markdown(index=False)
+        return texto_final
 
     except Exception as e:
-        return f"Erro ao tentar ler o catálogo: {e}"
+        return f"Erro ao ler: {e}"
