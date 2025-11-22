@@ -1,14 +1,34 @@
 # O main.py vai salvar o JSON neste arquivo aqui.
 # O utils só precisa ler ele.
 import pandas as pd
+import os
+import glob
 import json
 
+# pasta
+PASTA_UPLOADS = "uploads"
+
+# enontea arquvio mais novo
+def encontrar_ultimo_catalogo():
+    # Se a pasta não existe cria ela
+    if not os.path.exists(PASTA_UPLOADS):
+        os.makedirs(PASTA_UPLOADS)
+        return None
+
+    # pegaa todos os arquivos da pasta
+    arquivos = glob.glob(os.path.join(PASTA_UPLOADS, "*"))
+    
+    if not arquivos:
+        return None
+
+    # pega o mais recente
+    return max(arquivos, key=os.path.getmtime)
 def carregar_dados_como_txt():
-    #parte de encontrar o arquivo igual ante
+    #parte de encontrar o arquivo igual
     arquivo = encontrar_ultimo_catalogo() 
     
     try:
-        # se for json, 
+        # se for json
         if arquivo.endswith(".json"):
            
             df = pd.read_json(arquivo)
@@ -27,3 +47,4 @@ def carregar_dados_como_txt():
 
     except Exception as e:
         return f"Erro ao ler: {e}"
+
