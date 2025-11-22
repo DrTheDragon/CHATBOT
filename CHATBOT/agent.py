@@ -1,3 +1,4 @@
+# Cria a lore do bot e acessa a key
 import os
 import sys
 
@@ -38,3 +39,4 @@ def consultar_ia(pergunta_cliente, texto_catalogo):
     resultado = equipe.kickoff()
 
     return str(resultado)
+
