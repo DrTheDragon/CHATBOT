@@ -65,26 +65,6 @@ async def chat_endpoint(request: ChatRequest):
     except Exception as e:
         print(f"Erro no chat: {e}") # mostra no terminal
         raise HTTPException(status_code=500, detail=str(e))from fastapi import FastAPI, UploadFile, File, HTTPException #p entrada e saida de infos
-from fastapi.middleware.cors import CORSMiddleware #evitar erro 
-from pydantic import BaseModel #gerantir que chegue o dado certo
-import shutil #pegar arquivos no buffer
-import os
-
-from agent import consultar_ia
-from until import carregar_dados_como_txt
-
-app = FastAPI()
-
-origins = ["*"]  # isso aqui e pro navegador nao dar erro, o certo e deixar o dominio do site
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins, 
-    allow_credentials=True, #aceitar cookies
-    allow_methods=["*"], # a web pode usar todas as acoes
-    allow_headers=["*"], # aceitar qualquer header do front
-)
-
 # converte a string json num objeto python
 class ChatRequest(BaseModel):
     mensagem: str 
@@ -131,4 +111,5 @@ async def chat_endpoint(request: ChatRequest):
     except Exception as e:
         print(f"Erro no chat: {e}") # mostra no terminal
         raise HTTPException(status_code=500, detail=str(e))
+
 
