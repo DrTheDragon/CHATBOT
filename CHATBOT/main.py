@@ -15,7 +15,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins, 
     allow_credentials=True, #aceitar cookies
-    allow_methods=["*"], # a web pode usar todas as acoes
+    allow_methods=["*"], # o front pode usar todas as acoes
     allow_headers=["*"], # aceitar qualquer header do front
 )
 
@@ -131,3 +131,4 @@ async def chat_endpoint(request: ChatRequest):
     except Exception as e:
         print(f"Erro no chat: {e}") # mostra no terminal
         raise HTTPException(status_code=500, detail=str(e))
+
