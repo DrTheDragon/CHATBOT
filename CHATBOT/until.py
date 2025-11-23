@@ -1,5 +1,5 @@
-# O main.py vai salvar o JSON neste arquivo aqui.
-# basicamente esse arquivo procura o o ultimo estoque enviado.
+# o main.py vai salvar o JSON neste arquivo aqui
+# basicamente esse arquivo procura o o ultimo estoque enviado
 import pandas as pd
 import os
 import glob
@@ -15,7 +15,7 @@ def encontrar_ultimo_catalogo():
         os.makedirs(PASTA_UPLOADS)
         return None
 
-    # pegaa todos os arquivos da pasta
+    # pega todos os arquivos da pasta
     arquivos = glob.glob(os.path.join(PASTA_UPLOADS, "*"))
     
     if not arquivos:
@@ -33,7 +33,7 @@ def carregar_dados_como_txt():
            
             df = pd.read_json(arquivo)
         elif arquivo.endswith(".xlsx") or arquivo.endswith(".xls"):
-            # Mse for excel
+            # se for excel
             df = pd.read_excel(arquivo)
         elif arquivo.endswith(".csv"):
             # se for csv
@@ -41,11 +41,12 @@ def carregar_dados_como_txt():
         else:
             return "Formato não suportado!"
 
-        # deixa o arquivo legivwel p o gemini
+        # deixa o arquivo legivel p o gemini
         texto_final = df.to_markdown(index=False)
         return texto_final
 
     except Exception as e:
         return f"Erro ao ler: {e}"
+
 
 
