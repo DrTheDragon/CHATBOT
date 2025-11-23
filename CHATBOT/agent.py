@@ -2,6 +2,9 @@
 import os
 import sys
 
+# força terminal a aceitar UTF-8, caso a ia use algum emoji
+sys.stdout.reconfigure(encoding='utf-8')
+
 os.environ["LLM_PROVIDER"] = "google"
 os.environ["MODEL_NAME"] = "gemini-2.0-flash" 
 os.environ["GOOGLE_API_KEY"] = "chave"
@@ -39,4 +42,5 @@ def consultar_ia(pergunta_cliente, texto_catalogo):
     resultado = equipe.kickoff()
 
     return str(resultado)
+
 
