@@ -115,3 +115,9 @@ async def get_historico():
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+#swagger
+#uvicorn main:app --reload
+#http://127.0.0.1:8000/docs
+
