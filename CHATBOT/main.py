@@ -3,7 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware # evitar erro
 from pydantic import BaseModel # gerantir que chegue o dado certo
 import shutil # pegar arquivos no buffer
 import os
-import psycopg2 # conectar no banco da empresa (Supabase)
+import psycopg2 # conectar no banco supabase
 from datetime import datetime
 
 from agent import consultar_ia
@@ -32,7 +32,7 @@ os.makedirs(PASTA_UPLOADS, exist_ok=True) # garante q a pasta exitse
 
 # --- BD ---
 
-# Agora o servidor da empresa é o banco do Supabase
+# servidor da empresa (agora Supabase PostgreSQL)
 URL_SERVIDOR_EMPRESA = "postgresql://postgres:qualqueremoresa@db.ttekfuhzypbaaugruvsr.supabase.co:5432/postgres"
 
 def salvar_resposta_local(pergunta: str, resposta: str):
@@ -40,14 +40,13 @@ def salvar_resposta_local(pergunta: str, resposta: str):
     try:
         with open("historico_respostas.txt", "a", encoding="utf-8") as f:
             f.write(f"Pergunta: {pergunta}\n")
-            f.write(f"Resposta: {resposta}\n")
-            f.write("-" * 20 + "\n") # Separador visual
+            f.write(f"Resposta: {resposta}\n\n")
     except Exception as e:
         print(f"Erro ao salvar local: {e}")
 
 
-def enviar_para_servidor_empresa(resposta: str):
-    # agora envia resposta para o banco de dados supabase
+def enviar_para_servidor_empresa(pergunta: str, resposta: str):
+    # envia pergunta + resposta para o banco supabase
     try:
         conn = psycopg2.connect(URL_SERVIDOR_EMPRESA)
         cursor = conn.cursor()
@@ -56,22 +55,23 @@ def enviar_para_servidor_empresa(resposta: str):
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS respostas_chat (
                 id SERIAL PRIMARY KEY,
+                pergunta TEXT NOT NULL,
                 resposta TEXT NOT NULL,
                 timestamp TIMESTAMP NOT NULL
             );
         """)
 
-        # insere a resposta
+        # insere a pergunta e a resposta
         cursor.execute("""
-            INSERT INTO respostas_chat (resposta, timestamp)
-            VALUES (%s, %s)
-        """, (resposta, datetime.now()))
+            INSERT INTO respostas_chat (pergunta, resposta, timestamp)
+            VALUES (%s, %s, %s)
+        """, (pergunta, resposta, datetime.now()))
 
         conn.commit()
         cursor.close()
         conn.close()
 
-        print("Enviado para o servidor da empresa (Supabase).")
+        print("Pergunta e resposta enviadas ao Supabase.")
 
     except Exception as e:
         print("Erro ao enviar para servidor da empresa (mas o chat segue):", e)
@@ -114,8 +114,8 @@ async def chat_endpoint(request: ChatRequest):
         # salva no TXT local pergunta e resposta
         salvar_resposta_local(request.mensagem, resposta_ia)
 
-        # envia para o servidor da empresa (Supabase)
-        enviar_para_servidor_empresa(resposta_ia)
+        # envia pergunta + resposta para o servidor (Supabase)
+        enviar_para_servidor_empresa(request.mensagem, resposta_ia)
 
         return {"resposta": resposta_ia}
 
