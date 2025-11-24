@@ -33,7 +33,7 @@ os.makedirs(PASTA_UPLOADS, exist_ok=True) # garante q a pasta exitse
 # --- BD ---
 
 # servidor da empresa (agora Supabase PostgreSQL)
-URL_SERVIDOR_EMPRESA = "postgresql://postgres:qualqueremoresa@db.ttekfuhzypbaaugruvsr.supabase.co:6432/postgres"
+URL_SERVIDOR_EMPRESA = "postgresql://postgres:qualquerempresa@db.ttekfuhzypbaaugruvsr.supabase.co:6432/postgres"
 
 def salvar_resposta_local(pergunta: str, resposta: str):
     #salva pergunta + resposta no historico
@@ -142,4 +142,5 @@ async def get_historico():
 #swagger
 #uvicorn main:app --reload
 #http://127.0.0.1:8000/docs
+
 
