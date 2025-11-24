@@ -6,3 +6,4 @@ mangaba_ai
 python-dotenv
 google-generativeai
 tabulate
+psycopg2-binary
